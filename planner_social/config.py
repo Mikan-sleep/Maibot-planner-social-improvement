@@ -17,7 +17,7 @@ class PluginSection(PluginConfigBase):
     __ui_order__ = 0
 
     enabled: bool = Field(default=True, description="是否启用插件")
-    config_version: str = Field(default="0.1.0", description="配置版本")
+    config_version: str = Field(default="1.0.0", description="配置版本")
 
 
 class SocialSection(PluginConfigBase):

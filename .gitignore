@@ -9,6 +9,7 @@ __pycache__/
 htmlcov/
 
 # Runtime data
+config.toml
 data/
 *.sqlite3
 *.sqlite3-*

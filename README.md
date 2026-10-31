@@ -52,6 +52,9 @@ python scripts/build_plugin.py
 
 把 zip 解压到 `MaiBot/plugins/maibot-team.planner-social/`，或直接把仓库 checkout 到该目录，然后重启/重载插件。
 
+插件首次加载会根据 `PluginConfigBase` 自动生成 `config.toml`；仓库里的 `config.example.toml`
+只是参考。**不要把 `config.toml` 提交到 Release 根目录**：插件市场会拒绝包含它的发布版本。
+
 要求：
 
 - MaiBot `1.3.x`

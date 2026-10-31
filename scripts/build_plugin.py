@@ -14,7 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DIST = ROOT / "dist"
-INCLUDE_FILES = ["_manifest.json", "config.toml", "plugin.py", "webui.json", "README.md", "CHANGELOG.md", "LICENSE"]
+INCLUDE_FILES = ["_manifest.json", "config.example.toml", "plugin.py", "webui.json", "README.md", "CHANGELOG.md", "LICENSE"]
 INCLUDE_DIRS = ["planner_social", "ui", "assets", "docs"]
 EXCLUDE_PARTS = {"__pycache__", ".pytest_cache", ".ruff_cache"}
 

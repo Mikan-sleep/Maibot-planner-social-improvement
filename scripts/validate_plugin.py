@@ -16,7 +16,7 @@ import tomllib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-REQUIRED = ["_manifest.json", "config.toml", "plugin.py", "webui.json", "README.md", "CHANGELOG.md", "LICENSE"]
+REQUIRED = ["_manifest.json", "config.example.toml", "plugin.py", "webui.json", "README.md", "CHANGELOG.md", "LICENSE"]
 ID_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_.-]{0,127}$")
 VERSION_RE = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
 
@@ -47,11 +47,11 @@ def main() -> None:
     if "frequency.set_adjust" not in capabilities:
         fail("插件需要 frequency.set_adjust 能力用于频率调节")
 
-    config = tomllib.loads((ROOT / "config.toml").read_text(encoding="utf-8"))
+    config = tomllib.loads((ROOT / "config.example.toml").read_text(encoding="utf-8"))
     if not isinstance(config.get("social"), dict) or not isinstance(config.get("learning"), dict):
-        fail("config.toml 缺少 [social] 或 [learning]")
+        fail("config.example.toml 缺少 [social] 或 [learning]")
     if not isinstance(config.get("plugin"), dict) or not isinstance(config["plugin"].get("enabled"), bool):
-        fail("config.toml 缺少布尔值 [plugin].enabled")
+        fail("config.example.toml 缺少布尔值 [plugin].enabled")
 
     webui = json.loads((ROOT / "webui.json").read_text(encoding="utf-8"))
     if webui.get("schema_version") != 2:
