@@ -209,3 +209,14 @@ python scripts/build_plugin.py
 
 `SCHEMA_VERSION` 当前为 5。新增列通过 `ALTER TABLE` 兼容旧库；新增表通过
 `CREATE TABLE IF NOT EXISTS`。不要用“删库重建”解决迁移。
+
+### v1 数据表补充
+
+`	ext
+policies(group_id, weights_json, positive, negative, observations, prior_source, updated_at)
+decisions(..., reply_text, forced, label_source, judge_reason, addressed)
+reflections(id, group_id, text, sample_count, created_at)
+frequency_state(group_id, auto_multiplier, tuned_at, last_reason)
+`
+
+observations 用于冷启动；prior_source=global 表示新群使用了跨群权重先验，但样本数从 0 开始。
