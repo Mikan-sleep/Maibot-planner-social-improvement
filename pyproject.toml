@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "maibot-planner-social"
-version = "1.0.0"
+version = "1.0.1"
 description = "Social addressee, turn-taking and feedback learning for MaiBot's Maisaka Planner"
 readme = "README.md"
 license = { text = "GPL-3.0-or-later" }
@@ -28,9 +28,9 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/your-org/maibot-planner-social"
-Repository = "https://github.com/your-org/maibot-planner-social"
-Issues = "https://github.com/your-org/maibot-planner-social/issues"
+Homepage = "https://github.com/Mikan-sleep/Maibot-planner-social-improvement"
+Repository = "https://github.com/Mikan-sleep/Maibot-planner-social-improvement"
+Issues = "https://github.com/Mikan-sleep/Maibot-planner-social-improvement/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["planner_social"]

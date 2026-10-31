@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.1 — 2026-11-01
+
+- 市场合规修复：仓库根目录不再包含 `config.toml`，改用 `config.example.toml`；运行时自动生成配置。
+- 修复自动生成配置的 `config_version` 仍为 0.1.0 的问题。
+- 修正 manifest / pyproject / README 的仓库地址。
+- 保留 v1.0.0 Release 不动，使用新的 v1.0.1 提交市场审核。
+
 ## 1.0.0 — 2026-11-01
 
 首个独立项目版本。

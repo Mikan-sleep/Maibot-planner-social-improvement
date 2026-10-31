@@ -3,7 +3,7 @@
 为 MaiBot 的 Maisaka Planner 提供**发言对象判断、话轮策略、LLM 反馈学习**和可调的发言频率。它是一个独立维护的插件项目，不依赖修改 MaiBot 核心代码。
 
 > 插件 ID：`maibot-team.planner-social`  
-> 当前版本：`1.0.0`  
+> 当前版本：`1.0.1`  
 > 许可证：GPL-3.0-or-later
 
 ## 它解决什么
@@ -34,13 +34,10 @@
 
 ### 插件市场 / GitHub
 
-把本仓库发布到 GitHub 后，在 MaiBot 插件市场通过仓库地址安装。发布前请把以下占位符替换成真实地址：
+仓库：[Mikan-sleep/Maibot-planner-social-improvement](https://github.com/Mikan-sleep/Maibot-planner-social-improvement)
 
-- `_manifest.json` 的 `urls.repository` / `homepage` / `issues`
-- `pyproject.toml` 的 `[project.urls]`
-- `README.md` 中的仓库链接
-
-市场按 Git 仓库 + Release tag 识别版本；打 tag 前确认 `_manifest.json` 的 `version` 与 tag 一致（如 `1.0.0` ↔ `v1.0.0`）。
+市场按 Git 仓库 + Release tag 识别版本；打 tag 前确认 `_manifest.json` 的 `version` 与 tag 一致
+（如 `1.0.1` ↔ `v1.0.1`）。
 
 ### 本地构建
 

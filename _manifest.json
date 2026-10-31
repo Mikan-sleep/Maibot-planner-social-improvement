@@ -1,18 +1,18 @@
 {
   "manifest_version": 2,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "name": "Planner Social",
   "description": "为 Maisaka Planner 提供发言对象/话轮判断、LLM 反馈裁判、每群在线学习、群规范反思和可调发言频率；支持可回滚的 stop→reply 深度改写。",
   "author": {
     "name": "Planner Social contributors",
-    "url": "https://github.com/your-org"
+    "url": "https://github.com/Mikan-sleep"
   },
   "license": "GPL-3.0-or-later",
   "urls": {
-    "repository": "https://github.com/your-org/maibot-planner-social",
-    "homepage": "https://github.com/your-org/maibot-planner-social",
-    "documentation": "https://github.com/your-org/maibot-planner-social#readme",
-    "issues": "https://github.com/your-org/maibot-planner-social/issues"
+    "repository": "https://github.com/Mikan-sleep/Maibot-planner-social-improvement",
+    "homepage": "https://github.com/Mikan-sleep/Maibot-planner-social-improvement",
+    "documentation": "https://github.com/Mikan-sleep/Maibot-planner-social-improvement#readme",
+    "issues": "https://github.com/Mikan-sleep/Maibot-planner-social-improvement/issues"
   },
   "changelog": "CHANGELOG.md",
   "host_application": {
