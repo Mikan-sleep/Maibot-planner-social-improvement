@@ -1,0 +1,50 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "maibot-planner-social"
+version = "1.0.0"
+description = "Social addressee, turn-taking and feedback learning for MaiBot's Maisaka Planner"
+readme = "README.md"
+license = { text = "GPL-3.0-or-later" }
+requires-python = ">=3.12"
+authors = [{ name = "MaiBot Planner Social contributors" }]
+keywords = ["maibot", "plugin", "planner", "social", "llm"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Environment :: Plugins",
+  "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Communications :: Chat",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "ruff>=0.6",
+]
+
+[project.urls]
+Homepage = "https://github.com/your-org/maibot-planner-social"
+Repository = "https://github.com/your-org/maibot-planner-social"
+Issues = "https://github.com/your-org/maibot-planner-social/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["planner_social"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+extend-exclude = ["ui", "dist"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["E501"]

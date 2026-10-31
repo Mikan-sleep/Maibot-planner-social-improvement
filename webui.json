@@ -1,0 +1,163 @@
+{
+  "schema_version": 2,
+  "required_capabilities": [
+    "custom_pages"
+  ],
+  "workspace_title": "Planner 社交策略",
+  "pages": [
+    {
+      "id": "dashboard",
+      "mode": "custom",
+      "title": "Planner 社交策略",
+      "description": "用 ? 图标解释每个参数；调试阈值/频率/容忍度/强制回复，查看 LLM 反馈与学习权重。",
+      "placement": "sidebar",
+      "icon": "chart",
+      "entry": "ui/dashboard.html",
+      "layout": "document",
+      "queries": {
+        "dashboard": {
+          "api": "dashboard",
+          "version": "1"
+        }
+      },
+      "actions": {
+        "save": {
+          "api": "update_settings",
+          "version": "1",
+          "parameters": {
+            "enabled": {
+              "type": "boolean",
+              "required": true
+            },
+            "reply_threshold": {
+              "type": "number",
+              "required": true,
+              "minimum": 0,
+              "maximum": 1
+            },
+            "talk_multiplier": {
+              "type": "number",
+              "required": true,
+              "minimum": 0.2,
+              "maximum": 3
+            },
+            "learning_rate": {
+              "type": "number",
+              "required": true,
+              "minimum": 0.001,
+              "maximum": 0.5
+            },
+            "participation_mode": {
+              "type": "string",
+              "required": true,
+              "choices": [
+                "conservative",
+                "balanced",
+                "active"
+              ]
+            },
+            "bot_tolerance": {
+              "type": "number",
+              "required": true,
+              "minimum": 0,
+              "maximum": 1
+            },
+            "force_reply": {
+              "type": "boolean",
+              "required": true
+            },
+            "force_min_utility": {
+              "type": "number",
+              "required": true,
+              "minimum": 0,
+              "maximum": 1
+            },
+            "force_cooldown_seconds": {
+              "type": "integer",
+              "required": true,
+              "minimum": 0,
+              "maximum": 120
+            },
+            "force_after_bot_seconds": {
+              "type": "integer",
+              "required": true,
+              "minimum": 0,
+              "maximum": 600
+            },
+            "force_lock_after_negative_seconds": {
+              "type": "integer",
+              "required": true,
+              "minimum": 0,
+              "maximum": 3600
+            },
+            "feedback_mode": {
+              "type": "string",
+              "required": true,
+              "choices": [
+                "llm",
+                "hybrid",
+                "keyword"
+              ]
+            },
+            "force_whitelist": {
+              "type": "string",
+              "required": true,
+              "max_length": 1000
+            },
+            "force_auto_disable_after_negatives": {
+              "type": "integer",
+              "required": true,
+              "minimum": 0,
+              "maximum": 20
+            },
+            "auto_frequency": {
+              "type": "boolean",
+              "required": true
+            },
+            "target_reply_rate": {
+              "type": "number",
+              "required": true,
+              "minimum": 0,
+              "maximum": 1
+            },
+            "frequency_tune_messages": {
+              "type": "integer",
+              "required": true,
+              "minimum": 5,
+              "maximum": 500
+            },
+            "frequency_step": {
+              "type": "number",
+              "required": true,
+              "minimum": 0.01,
+              "maximum": 1
+            },
+            "frequency_min_multiplier": {
+              "type": "number",
+              "required": true,
+              "minimum": 0.2,
+              "maximum": 3
+            },
+            "frequency_max_multiplier": {
+              "type": "number",
+              "required": true,
+              "minimum": 0.2,
+              "maximum": 3
+            }
+          }
+        },
+        "reset": {
+          "api": "reset",
+          "version": "1",
+          "parameters": {
+            "stream_id": {
+              "type": "string",
+              "required": false
+            }
+          },
+          "confirmation": "确认清空全部群的社交策略权重？消息与决策记录会保留到保留期结束。"
+        }
+      }
+    }
+  ]
+}

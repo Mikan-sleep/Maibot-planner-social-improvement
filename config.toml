@@ -1,0 +1,52 @@
+[plugin]
+enabled = true
+config_version = "1.0.0"
+
+[social]
+enabled = true
+bot_names = ["柚子"]
+history_window = 12
+recent_bot_seconds = 30
+burst_window_seconds = 12
+burst_threshold = 3
+reply_threshold = 0.38
+talk_multiplier = 1.8
+auto_frequency = false
+target_reply_rate = 0.08
+frequency_tune_messages = 30
+frequency_step = 0.1
+frequency_min_multiplier = 0.5
+frequency_max_multiplier = 2.5
+participation_mode = "active"
+bot_tolerance = 0.8
+force_reply = false
+force_min_utility = 0.2
+force_cooldown_seconds = 60
+force_after_bot_seconds = 90
+force_lock_after_negative_seconds = 900
+force_whitelist = []
+force_auto_disable_after_negatives = 3
+learning_rate = 0.05
+max_weight = 6.0
+neutral_limit = 3
+outcome_window_seconds = 90
+negative_keywords = ["别插嘴", "没问你", "闭嘴", "别说了", "谁问你了", "别烦", "滚"]
+
+[learning]
+feedback_mode = "llm"
+judge_model = ""
+judge_min_confidence = 0.55
+judge_temperature = 0.0
+judge_max_tokens = 180
+judge_timeout_seconds = 20
+cold_start_min_feedback = 8
+cross_group_prior = true
+cross_group_min_groups = 2
+reflection_enabled = true
+reflection_every = 12
+reflection_model = ""
+reflection_max_tokens = 240
+
+[privacy]
+store_message_text = true
+retention_days = 7

@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    color-scheme: light;
+    --page-bg: transparent;
+    --text: var(--color-foreground, #18181b);
+    --muted: var(--color-muted-foreground, #71717a);
+    --card: var(--color-card, #ffffff);
+    --card-text: var(--color-card-foreground, #18181b);
+    --border: var(--color-border, #e4e4e7);
+    --soft: var(--color-muted, #f4f4f5);
+    --primary: var(--color-primary, #2563eb);
+    --primary-text: var(--color-primary-foreground, #ffffff);
+    --danger: var(--color-destructive, #dc2626);
+    --popover: var(--color-popover, #ffffff);
+    --shadow: 0 10px 30px rgba(0, 0, 0, .12);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 16px;
+    background: var(--page-bg);
+    color: var(--text);
+    font-family: "Noto Sans SC", "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; display: grid; gap: 14px; }
+  .hero {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+    padding: 16px 18px; border: 1px solid var(--border); border-radius: 14px;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--card) 92%, var(--primary) 8%), var(--card));
+  }
+  .eyebrow { color: var(--muted); font-size: 10px; letter-spacing: .16em; font-weight: 700; }
+  h1 { font-size: 20px; line-height: 1.25; margin: 4px 0 4px; }
+  h2 { font-size: 14px; margin: 0; }
+  .muted { color: var(--muted); }
+  .hero p { margin: 0; max-width: 720px; color: var(--muted); }
+  .status {
+    flex: 0 0 auto; max-width: 340px; text-align: right; color: var(--muted);
+    font-size: 12px; white-space: pre-wrap;
+  }
+  .stats { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; }
+  .stat {
+    border: 1px solid var(--border); border-radius: 12px; background: var(--card);
+    color: var(--card-text); padding: 12px 13px; min-height: 70px;
+  }
+  .stat .label { color: var(--muted); font-size: 11px; }
+  .stat .value { font-size: 22px; font-weight: 750; line-height: 1.3; margin-top: 3px; }
+  .card {
+    border: 1px solid var(--border); border-radius: 14px; background: var(--card);
+    color: var(--card-text); padding: 16px 18px;
+  }
+  .card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+  .card-head .sub { color: var(--muted); font-size: 12px; }
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 20px; }
+  .field { min-width: 0; }
+  .field-head { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; font-weight: 650; }
+  .field-note { color: var(--muted); font-size: 11px; margin-top: 4px; }
+  .help-wrap { position: relative; display: inline-flex; align-items: center; }
+  .help {
+    width: 17px; height: 17px; border-radius: 50%; border: 1px solid var(--border);
+    background: var(--soft); color: var(--muted); font-size: 11px; font-weight: 800;
+    display: inline-flex; align-items: center; justify-content: center; cursor: help;
+    padding: 0; line-height: 1; user-select: none; outline: none;
+  }
+  .help:hover, .help:focus { border-color: var(--primary); color: var(--primary); }
+  .tip {
+    position: absolute; z-index: 80; left: 50%; bottom: calc(100% + 8px); width: 300px;
+    max-width: 72vw; transform: translate(-50%, 3px); opacity: 0; visibility: hidden;
+    pointer-events: none; transition: opacity .12s ease, transform .12s ease;
+    background: var(--popover); color: var(--card-text); border: 1px solid var(--border);
+    border-radius: 10px; box-shadow: var(--shadow); padding: 10px 12px;
+    font-size: 12px; font-weight: 400; line-height: 1.6; text-align: left;
+  }
+  .tip strong { display: block; margin-bottom: 3px; }
+  .help-wrap:hover .tip, .help-wrap:focus-within .tip {
+    opacity: 1; visibility: visible; transform: translate(-50%, 0);
+  }
+  input[type="number"], input[type="text"], select {
+    width: 100%; height: 34px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--card); color: var(--card-text); padding: 0 9px; font: inherit;
+    outline: none;
+  }
+  input[type="number"]:focus, input[type="text"]:focus, select:focus { border-color: var(--primary); }
+  .checkbox { display: inline-flex; align-items: center; gap: 8px; height: 34px; }
+  .checkbox input { width: 16px; height: 16px; accent-color: var(--primary); }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 14px; }
+  button {
+    height: 34px; border-radius: 8px; border: 1px solid transparent; padding: 0 14px;
+    font: inherit; font-weight: 650; cursor: pointer; background: var(--soft); color: var(--card-text);
+  }
+  button.primary { background: var(--primary); color: var(--primary-text); }
+  button.danger { background: var(--danger); color: #fff; }
+  button:disabled { opacity: .55; cursor: not-allowed; }
+  .notice {
+    margin-top: 10px; padding: 9px 11px; border-radius: 8px; font-size: 12px;
+    background: var(--soft); color: var(--muted);
+  }
+  .error {
+    border: 1px solid color-mix(in srgb, var(--danger) 45%, var(--border));
+    background: color-mix(in srgb, var(--danger) 10%, var(--card));
+    color: var(--danger); border-radius: 10px; padding: 10px 12px; white-space: pre-wrap;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th, td { text-align: left; padding: 7px 6px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--muted); font-weight: 650; white-space: nowrap; }
+  td { overflow-wrap: anywhere; }
+  .tables { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 18px; }
+  .weights { max-height: 300px; overflow: auto; }
+  .empty { color: var(--muted); padding: 12px 0; }
+  .pill { display: inline-block; padding: 1px 7px; border-radius: 999px; background: var(--soft); color: var(--muted); font-size: 11px; }
+  [hidden] { display: none !important; }
+  @media (max-width: 860px) {
+    .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid { grid-template-columns: 1fr; }
+    .tables { grid-template-columns: 1fr; }
+    .hero { flex-direction: column; }
+    .status { text-align: left; max-width: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div>
+      <div class="eyebrow">PLANNER SOCIAL LEARNING</div>
+      <h1>Planner 社交策略</h1>
+      <p>调节发言对象、话轮和频率策略；LLM 判断反馈，插件学习每群的开口边界。悬停参数旁的 <b>?</b> 查看说明。</p>
+    </div>
+    <div class="status" id="status">正在加载…</div>
+  </header>
+
+  <div id="error" class="error" hidden></div>
+
+  <section class="stats" aria-label="运行统计">
+    <div class="stat"><div class="label">决策总数</div><div class="value" id="stat-total">—</div></div>
+    <div class="stat"><div class="label">回复</div><div class="value" id="stat-replies">—</div></div>
+    <div class="stat"><div class="label">等待 / 停止</div><div class="value" id="stat-stops">—</div></div>
+    <div class="stat"><div class="label">正反馈</div><div class="value" id="stat-positive">—</div></div>
+    <div class="stat"><div class="label">负反馈</div><div class="value" id="stat-negative">—</div></div>
+    <div class="stat"><div class="label">强制改写</div><div class="value" id="stat-forced">—</div></div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>运行参数</h2>
+      <span class="sub">保存后立即生效；写入插件数据库，不改 config.toml</span>
+    </div>
+    <div class="grid">
+      <div class="field">
+        <div class="field-head"><span>启用社交策略</span>
+          <span class="help-wrap"><span class="help" tabindex="0" role="button" aria-label="启用社交策略说明">?</span><span class="tip" role="tooltip"><strong>启用社交策略</strong>总开关。关闭后不再向 Planner 注入社交状态，也不会执行强制改写；已经保存的消息和决策仍按保留期保留。</span></span>
+        </div>
+        <label class="checkbox"><input id="enabled" type="checkbox"> 启用</label>
+        <div class="field-note">关掉后回到“原始 Planner”，适合排查问题。</div>
+      </div>
+
+      <div class="field">
+        <div class="field-head"><span>回复阈值</span>
+          <span class="help-wrap"><span class="help" tabindex="0" role="button" aria-label="回复阈值说明">?</span><span class="tip" role="tooltip"><strong>回复阈值（0~1）</strong>策略分数达到它才建议回复。调低会更容易开口，调高更安静；建议 0.30~0.50。太接近 0 会让机器人在无关话题也接话。</span></span>
+        </div>
+        <input id="reply_threshold" type="number" min="0" max="1" step="0.01" value="0.38">
+        <div class="field-note">默认 0.38；调低=更活跃。</div>
+      </div>
+
+      <div class="field">
+        <div class="field-head"><span>发言频率倍率</span>
+          <span class="help-wrap"><span class="help" tabindex="0" role="button" aria-label="发言频率倍率说明">?</span><span class="tip" role="tooltip"><strong>发言频率倍率（0.2~3）</strong>直接乘到 Maibot 本会话的 talk_value。调高会让 Planner 更频繁地进入思考；1.0 表示不改变。调得过高会增加 token 消耗和插话概率。</span></span>
+        </div>
+        <input id="talk_multiplier" type="number" min="0.2" max="3" step="0.1" value="1.8">
+        <div class="field-note">默认 1.8；1.0=不改变原频率。</div>
+      </div>
+
+      <div class="field">
+        <div class="field-head"><span>社交参与模式</span>
+          <span class="help-wrap"><span class="help" tabindex="0" role="button" aria-label="社交参与模式说明">?</span><span class="tip" role="tooltip"><strong>社交参与模式</strong>conservative：只接点名/引用；balanced：相关才接；active：允许未被点名时短评。它改变提示里的发言倾向和硬规则，不直接改 talk_value。</span></span>
+        </div>
+        <select id="participation_mode">
+          <option value="conservative">conservative：只接点名</option>
+          <option value="balanced">balanced：相关才接</option>
+          <option value="active">active：可主动短评</option>
+        </select>
+        <div class="field-note">默认 active；太吵时先切 balanced。</div>
+      </div>
+
+      <div class="field">
+        <div class="field-head"><span>机器人容忍度</span>
+          <span class="help-wrap"><span class="help" tabindex="0" role="button" aria-label="机器人容忍度说明">?</span><span class="tip" role="tooltip"><strong>机器人容忍度（0~1）</strong>群友对机器人主动发言的容忍度通常高于人类。数值越高，策略越不把“没被点名”当负分；调高会更容易接话，调低更接近严格人类话轮规则。</span></span>
+        </div>
+        <input id="bot_tolerance" type="number" min="0" max="1" step="0.05" value="0.8">
+        <div class="field-note">默认 0.8；建议 0.6~0.9。</div>
+      </div>
+
+      <div class="field">
+        <div class="field-head"><span>反馈判定方式</span>
+          <span class="help-wrap"><span class="help" tabindex="0" role="button" aria-label="反馈判定方式说明">?</span><span class="tip" role="tooltip"><strong>反馈判定方式</strong>llm：调用模型判断正/负/中性，最准但耗 token；hybrid：关键词即时 + 模型补模糊；keyword：只靠关键词，最省但容易误判反讽和玩笑。</span></span>
+        </div>
+        <select id="feedback_mode">
+          <option value="llm">llm：模型裁判（推荐）</option>
+          <option value="hybrid">hybrid：关键词 + 模型</option>
+          <option value="keyword">keyword：只靠关键词</option>
+        </select>
+        <div class="field-note">默认 llm；失败/低置信度不会污染权重。</div>
+      </div>
+
+      <div class="field">
+        <div class="field-head"><span>学习步长</span>
+          <span class="help-wrap"><span class="help" tabindex="0" role="button" aria-label="学习步长说明">?</span><span class="tip" role="tooltip"><strong>学习步长（0.001~0.5）</strong>每次反馈更新策略权重的幅度。调大学习快，但容易被单次误判带偏；建议 0.01~0.10。改动只影响之后的新反馈。</span></span>
+        </div>
+        <input id="learning_rate" type="number" min="0.001" max="0.5" step="0.001" value="0.05">
+        <div class="field-note">默认 0.05；调小更稳。</div>
+      </div>
+
+      <div class="field">
+        <div class="field-head"><span>允许强制改写 reply</span>
+          <span class="help-wrap"><span class="help" tabindex="0" role="button" aria-label="强制改写说明">?</span><span class="tip" role="tooltip"><strong>强制改写 reply</strong>Planner 已经决定 stop/wait 时，插件把它改成 reply，这是对Maibot原始Planner决策的直接改写。默认关闭；开启前请保留下面的冷却和负反馈锁定。</span></span>
+        </div>
+        <label class="checkbox"><input id="force_reply" type="checkbox"> 允许改写</label>
+        <div class="field-note">默认关闭；打开后每轮 stop 都可能变成开口。</div>
+      </div>
+
+      <div class="field">
+        <div class="field-head"><span>强制改写最低分</span>
+          <span class="help-wrap"><span class="help" tabindex="0" role="button" aria-label="强制改写最低分说明">?</span><span class="tip" role="tooltip"><strong>强制改写最低分（0~1）</strong>只有策略分数达到它才允许把 stop 改成 reply。调高更安全、开口更少；调低更容易强制回复。建议不低于 0.20。</span></span>
+        </div>
+        <input id="force_min_utility" type="number" min="0" max="1" step="0.01" value="0.2">
+        <div class="field-note">默认 0.2；不要设 0。</div>
+      </div>
+
+      <div class="field">
+        <div class="field-head"><span>强制改写冷却</span>
+          <span class="help-wrap"><span class="help" tabindex="0" role="button" aria-label="强制改写冷却说明">?</span><span class="tip" role="tooltip"><strong>强制改写冷却（秒）</strong>两次强制改写之间至少间隔多久。调大能明显降低连发/刷屏风险；被直接 @ 或引用机器人时可豁免。</span></span>
+        </div>
+        <input id="force_cooldown_seconds" type="number" min="0" max="120" step="1" value="60">
+        <div class="field-note">默认 60 秒；不建议低于 30。</div>
+      </div>
+
+      <div class="field">
+        <div class="field-head"><span>刚发言保护</span>
+          <span class="help-wrap"><span class="help" tabindex="0" role="button" aria-label="刚发言保护说明">?</span><span class="tip" role="tooltip"><strong>刚发言保护（秒）</strong>机器人刚说过话的这段时间内不强制改写，避免自己接自己。被直接 @/引用机器人时不受此限制。</span></span>
+        </div>
+        <input id="force_after_bot_seconds" type="number" min="0" max="600" step="1" value="90">
+        <div class="field-note">默认 90 秒；防连续追问。</div>
+      </div>
+
+      <div class="field">
+        <div class="field-head"><span>负反馈锁定</span>
+          <span class="help-wrap"><span class="help" tabindex="0" role="button" aria-label="负反馈锁定说明">?</span><span class="tip" role="tooltip"><strong>负反馈锁定（秒）</strong>收到明确负反馈后，强制改写暂停多久。调大更保守；这是防止“被说别插嘴还继续插”的最后一道闸。</span></span>
+        </div>
+        <input id="force_lock_after_negative_seconds" type="number" min="0" max="3600" step="1" value="900">
+        <div class="field-note">默认 900 秒（15 分钟）。</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <button class="primary" id="save">保存参数</button>
+      <span class="muted" id="save-state">参数保存后立即应用</span>
+    </div>
+    <div class="notice" id="force-notice">提示：强制改写默认关闭。开启前先确认冷却/刚发言/负反馈锁定三项保护，避免过于连续和频繁的插话。</div>
+  </section>
+
+
+  <section class="card">
+    <div class="card-head">
+      <h2>频率闭环与强制保护</h2>
+      <span class="sub">自动频率根据近期回复率微调；强制改写只允许白名单群</span>
+    </div>
+    <div class="grid">
+      <div class="field">
+        <div class="field-head"><span>自动频率</span>
+          <span class="help-wrap"><span class="help" tabindex="0" role="button" aria-label="自动频率说明">?</span><span class="tip" role="tooltip"><strong>自动频率</strong>开启后，每 N 条用户消息根据近 2 小时回复率自动微调倍率；手动倍率仍作为基准。默认关闭，避免突然变吵。</span></span>
+        </div>
+        <label class="checkbox"><input id="auto_frequency" type="checkbox"> 启用闭环</label>
+      </div>
+      <div class="field">
+        <div class="field-head"><span>目标回复率</span>
+          <span class="help-wrap"><span class="help" tabindex="0" role="button" aria-label="目标回复率说明">?</span><span class="tip" role="tooltip"><strong>目标回复率（0~1）</strong>机器人消息 / 用户消息。0.08 约等于每 100 条用户消息回 8 条。设得太高会更容易插话；建议 0.05~0.12。</span></span>
+        </div>
+        <input id="target_reply_rate" type="number" min="0" max="1" step="0.01" value="0.08">
+      </div>
+      <div class="field">
+        <div class="field-head"><span>调整间隔</span>
+          <span class="help-wrap"><span class="help" tabindex="0" role="button" aria-label="调整间隔说明">?</span><span class="tip" role="tooltip"><strong>调整间隔（用户消息数）</strong>每多少条用户消息评估一次。太小会抖动、太大反应慢；建议 20~50。</span></span>
+        </div>
+        <input id="frequency_tune_messages" type="number" min="5" max="500" step="1" value="30">
+      </div>
+      <div class="field">
+        <div class="field-head"><span>调整步长</span>
+          <span class="help-wrap"><span class="help" tabindex="0" role="button" aria-label="调整步长说明">?</span><span class="tip" role="tooltip"><strong>调整步长</strong>每次自动调整的倍率幅度。0.1 表示 1.0→1.1；太大容易过冲，建议 0.05~0.15。</span></span>
+        </div>
+        <input id="frequency_step" type="number" min="0.01" max="1" step="0.01" value="0.1">
+      </div>
+      <div class="field">
+        <div class="field-head"><span>自动倍率下限</span>
+          <span class="help-wrap"><span class="help" tabindex="0" role="button" aria-label="自动倍率下限说明">?</span><span class="tip" role="tooltip"><strong>自动倍率下限</strong>闭环最多把自动倍率降到多少；手动倍率会再乘上去。太低可能几乎不进入 Planner。</span></span>
+        </div>
+        <input id="frequency_min_multiplier" type="number" min="0.2" max="3" step="0.1" value="0.5">
+      </div>
+      <div class="field">
+        <div class="field-head"><span>自动倍率上限</span>
+          <span class="help-wrap"><span class="help" tabindex="0" role="button" aria-label="自动倍率上限说明">?</span><span class="tip" role="tooltip"><strong>自动倍率上限</strong>闭环最多把自动倍率升到多少；调高会更积极，但也更容易刷屏。</span></span>
+        </div>
+        <input id="frequency_max_multiplier" type="number" min="0.2" max="3" step="0.1" value="2.5">
+      </div>
+      <div class="field">
+        <div class="field-head"><span>强制改写白名单</span>
+          <span class="help-wrap"><span class="help" tabindex="0" role="button" aria-label="强制改写白名单说明">?</span><span class="tip" role="tooltip"><strong>强制改写白名单</strong>填群号，逗号分隔；只有列表里的群允许强制 reply。留空=不允许强制；填 * 才允许全部群（不建议）。</span></span>
+        </div>
+        <input id="force_whitelist" type="text" placeholder="例如 123456789,987654321" value="">
+      </div>
+      <div class="field">
+        <div class="field-head"><span>自动关闭阈值</span>
+          <span class="help-wrap"><span class="help" tabindex="0" role="button" aria-label="自动关闭阈值说明">?</span><span class="tip" role="tooltip"><strong>自动关闭阈值</strong>同一群累计多少次负反馈后自动关闭强制改写。0 表示不自动关闭；这是防“被说别插嘴还继续插”的熔断。</span></span>
+        </div>
+        <input id="force_auto_disable_after_negatives" type="number" min="0" max="20" step="1" value="3">
+      </div>
+    </div>
+    <div class="notice">自动频率和强制白名单都默认保守；先看 24 小时指标，再逐步放开。</div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>学习情况</h2>
+      <span class="sub" id="policy-summary">—</span>
+    </div>
+    <div class="notice" id="force-summary">—</div>
+    <div class="notice" id="metrics-summary">—</div>
+    <div class="notice" id="reflection">—</div>
+    <div class="muted" id="health" style="margin-top:8px">—</div>
+    <div class="tables">
+      <div>
+        <h3 class="muted" style="font-size:12px;margin:12px 0 6px">最近决策</h3>
+        <div style="max-height:320px;overflow:auto">
+          <table>
+            <thead><tr><th>时间</th><th>动作</th><th>分数</th><th>来源</th><th>改写</th><th>理由 / 实际回复</th></tr></thead>
+            <tbody id="recent-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <h3 class="muted" style="font-size:12px;margin:12px 0 6px">策略权重</h3>
+        <div class="weights">
+          <table>
+            <thead><tr><th>特征</th><th>权重</th></tr></thead>
+            <tbody id="weights-body"></tbody>
+          </table>
+        </div>
+        <div class="muted" style="font-size:11px;margin-top:8px">权重只影响开口判断；LLM 裁判负责标签，正/负反馈更新权重。</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>重置</h2>
+      <span class="sub">只清空策略权重，保留消息与决策记录</span>
+    </div>
+    <div class="row">
+      <button class="danger" id="reset">重置全部群策略</button>
+      <span class="help-wrap"><span class="help" tabindex="0" role="button" aria-label="重置说明">?</span><span class="tip" role="tooltip"><strong>重置全部群策略</strong>把所有群的 logistic 权重恢复默认，正负反馈计数清零；不会删除历史消息和决策，也不能撤销。</span></span></span>
+    </div>
+  </section>
+</div>
+<script>
+(() => {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+  const statusEl = $('status');
+  const errorEl = $('error');
+  let loaded = false;
+  let saving = false;
+
+  const FIELDS = [
+    'enabled', 'reply_threshold', 'talk_multiplier', 'participation_mode',
+    'bot_tolerance', 'feedback_mode', 'learning_rate', 'force_reply',
+    'force_min_utility', 'force_cooldown_seconds', 'force_after_bot_seconds',
+    'force_lock_after_negative_seconds',
+  ];
+
+  function unwrap(payload) {
+    if (payload && typeof payload === 'object' && Object.prototype.hasOwnProperty.call(payload, 'result')) {
+      return payload.result;
+    }
+    return payload;
+  }
+
+  function setStatus(text) { statusEl.textContent = text; }
+  function showError(error) {
+    errorEl.hidden = false;
+    errorEl.textContent = String(error && error.message ? error.message : error);
+  }
+  function clearError() { errorEl.hidden = true; errorEl.textContent = ''; }
+
+  function setText(id, value) {
+    const node = $(id);
+    if (node) node.textContent = value == null ? '—' : String(value);
+  }
+
+  function formatReward(value) {
+    if (value === 1 || value === '1') return '+1';
+    if (value === -1 || value === '-1') return '-1';
+    if (value === null || value === undefined || value === '') return '—';
+    return String(value);
+  }
+
+  function row(cells) {
+    const tr = document.createElement('tr');
+    for (const cell of cells) {
+      const td = document.createElement('td');
+      td.textContent = cell == null ? '' : String(cell);
+      tr.appendChild(td);
+    }
+    return tr;
+  }
+
+  function applyStats(data) {
+    setText('stat-total', data.total);
+    setText('stat-replies', data.replies);
+    setText('stat-stops', data.stops);
+    setText('stat-positive', data.positive);
+    setText('stat-negative', data.negative);
+    setText('stat-forced', data.forced);
+    setText('policy-summary', data.policy_summary || '—');
+    setText('force-summary', data.force_summary || '—');
+    const metrics = data.metrics || {};
+    setText('metrics-summary', `近 ${metrics.window_hours || 24} 小时：回复率 ${(Number(metrics.reply_rate || 0) * 100).toFixed(1)}% · 点名响应 ${(Number(metrics.addressed_response_rate || 0) * 100).toFixed(1)}% · 负反馈率 ${(Number(metrics.negative_rate || 0) * 100).toFixed(1)}% · 用户 ${metrics.users || 0} / 机器人 ${metrics.bot_messages || 0}`);
+    setText('reflection', data.reflection ? `本群反思：${data.reflection}` : '本群反思：还没有（积累足够反馈后由 LLM 生成）');
+    const health = data.health || {};
+    setText('health', `运行时健康：Hook 错误 ${health.hook_errors || 0} · LLM 错误 ${health.llm_errors || 0} · LLM 成功 ${health.llm_ok || 0}${health.last_error ? ` · 最近错误：${health.last_error}` : ''}`);
+
+    const recentBody = $('recent-body');
+    recentBody.replaceChildren();
+    const recent = Array.isArray(data.recent) ? data.recent : [];
+    if (!recent.length) {
+      const tr = document.createElement('tr');
+      const td = document.createElement('td');
+      td.colSpan = 6;
+      td.className = 'empty';
+      td.textContent = '还没有决策记录。';
+      tr.appendChild(td);
+      recentBody.appendChild(tr);
+    } else {
+      for (const item of recent.slice(0, 14)) {
+        const reason = [item.reason, item.reply_text].filter(Boolean).join(' / ');
+        recentBody.appendChild(row([
+          item.created_at || '',
+          item.action || '',
+          item.utility == null ? '' : Number(item.utility).toFixed(2),
+          item.source || (item.forced ? '插件改写' : 'planner'),
+          item.forced ? '是' : '',
+          reason || item.evidence || '',
+        ]));
+      }
+    }
+
+    const weightsBody = $('weights-body');
+    weightsBody.replaceChildren();
+    const weights = Array.isArray(data.weights_table) ? data.weights_table : [];
+    if (!weights.length) {
+      const tr = document.createElement('tr');
+      const td = document.createElement('td');
+      td.colSpan = 2;
+      td.className = 'empty';
+      td.textContent = '暂无权重数据。';
+      tr.appendChild(td);
+      weightsBody.appendChild(tr);
+    } else {
+      for (const item of weights) {
+        weightsBody.appendChild(row([item.feature, item.weight == null ? '' : Number(item.weight).toFixed(2)]));
+      }
+    }
+  }
+
+  function fillForm(settings) {
+    if (!settings || typeof settings !== 'object') return;
+    $('enabled').checked = Boolean(settings.enabled);
+    for (const [id, key] of [
+      ['reply_threshold', 'reply_threshold'],
+      ['talk_multiplier', 'talk_multiplier'],
+      ['bot_tolerance', 'bot_tolerance'],
+      ['learning_rate', 'learning_rate'],
+      ['force_min_utility', 'force_min_utility'],
+      ['force_cooldown_seconds', 'force_cooldown_seconds'],
+      ['force_after_bot_seconds', 'force_after_bot_seconds'],
+      ['force_lock_after_negative_seconds', 'force_lock_after_negative_seconds'],
+      ['force_auto_disable_after_negatives', 'force_auto_disable_after_negatives'],
+      ['target_reply_rate', 'target_reply_rate'],
+      ['frequency_tune_messages', 'frequency_tune_messages'],
+      ['frequency_step', 'frequency_step'],
+      ['frequency_min_multiplier', 'frequency_min_multiplier'],
+      ['frequency_max_multiplier', 'frequency_max_multiplier'],
+    ]) {
+      if (settings[key] !== undefined && settings[key] !== null) $(id).value = settings[key];
+    }
+    if (settings.participation_mode) $('participation_mode').value = settings.participation_mode;
+    if (settings.feedback_mode) $('feedback_mode').value = settings.feedback_mode;
+    $('force_reply').checked = Boolean(settings.force_reply);
+    $('auto_frequency').checked = Boolean(settings.auto_frequency);
+    $('force_whitelist').value = settings.force_whitelist || '';
+  }
+
+  function readForm() {
+    const number = (id) => {
+      const value = Number($(id).value);
+      if (!Number.isFinite(value)) throw new Error($(id).parentElement.querySelector('.field-head span')?.textContent + ' 必须是数字');
+      return value;
+    };
+    return {
+      enabled: $('enabled').checked,
+      reply_threshold: number('reply_threshold'),
+      talk_multiplier: number('talk_multiplier'),
+      learning_rate: number('learning_rate'),
+      participation_mode: $('participation_mode').value,
+      bot_tolerance: number('bot_tolerance'),
+      force_reply: $('force_reply').checked,
+      force_min_utility: number('force_min_utility'),
+      force_cooldown_seconds: Math.trunc(number('force_cooldown_seconds')),
+      force_after_bot_seconds: Math.trunc(number('force_after_bot_seconds')),
+      force_lock_after_negative_seconds: Math.trunc(number('force_lock_after_negative_seconds')),
+      force_whitelist: $('force_whitelist').value.trim(),
+      force_auto_disable_after_negatives: Math.trunc(number('force_auto_disable_after_negatives')),
+      auto_frequency: $('auto_frequency').checked,
+      target_reply_rate: number('target_reply_rate'),
+      frequency_tune_messages: Math.trunc(number('frequency_tune_messages')),
+      frequency_step: number('frequency_step'),
+      frequency_min_multiplier: number('frequency_min_multiplier'),
+      frequency_max_multiplier: number('frequency_max_multiplier'),
+      feedback_mode: $('feedback_mode').value,
+    };
+  }
+
+  async function load(initial) {
+    const data = unwrap(await window.maibot.query('dashboard', {}));
+    if (!data || data.success === false) throw new Error((data && data.error) || '读取面板失败');
+    applyStats(data);
+    if (initial) {
+      fillForm(data.settings);
+      setStatus('已加载 · ' + new Date().toLocaleTimeString());
+      loaded = true;
+    }
+  }
+
+  async function save() {
+    if (saving) return;
+    saving = true;
+    $('save').disabled = true;
+    clearError();
+    setStatus('保存中…');
+    try {
+      const args = readForm();
+      const data = unwrap(await window.maibot.action('save', args));
+      if (!data || data.success === false) throw new Error((data && data.error) || '保存失败');
+      applyStats(data);
+      fillForm(data.settings);
+      setStatus('已保存 · ' + new Date().toLocaleTimeString());
+      $('save-state').textContent = '已写入插件数据库，并已应用到已知会话';
+    } catch (error) {
+      showError(error);
+      setStatus('保存失败');
+    } finally {
+      saving = false;
+      $('save').disabled = false;
+    }
+  }
+
+  async function reset() {
+    clearError();
+    setStatus('等待确认重置…');
+    try {
+      const data = unwrap(await window.maibot.action('reset', { stream_id: '' }));
+      if (!data || data.success === false) throw new Error((data && data.error) || '重置失败');
+      await load(true);
+      setStatus('已重置全部群策略');
+    } catch (error) {
+      showError(error);
+      setStatus('重置取消或失败');
+    }
+  }
+
+  $('save').addEventListener('click', save);
+  $('reset').addEventListener('click', reset);
+
+  (async () => {
+    try {
+      await window.maibot.ready;
+      await load(true);
+      setInterval(() => {
+        if (!saving) load(false).catch((error) => { showError(error); setStatus('刷新失败'); });
+      }, 8000);
+    } catch (error) {
+      showError(error);
+      setStatus('初始化失败');
+    }
+  })();
+})();
+</script>
+</body>
+</html>

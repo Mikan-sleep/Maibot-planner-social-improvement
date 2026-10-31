@@ -1,0 +1,46 @@
+{
+  "manifest_version": 2,
+  "version": "1.0.0",
+  "name": "Planner Social",
+  "description": "为 Maisaka Planner 提供发言对象/话轮判断、LLM 反馈裁判、每群在线学习、群规范反思和可调发言频率；支持可回滚的 stop→reply 深度改写。",
+  "author": {
+    "name": "Planner Social contributors",
+    "url": "https://github.com/your-org"
+  },
+  "license": "GPL-3.0-or-later",
+  "urls": {
+    "repository": "https://github.com/your-org/maibot-planner-social",
+    "homepage": "https://github.com/your-org/maibot-planner-social",
+    "documentation": "https://github.com/your-org/maibot-planner-social#readme",
+    "issues": "https://github.com/your-org/maibot-planner-social/issues"
+  },
+  "changelog": "CHANGELOG.md",
+  "host_application": {
+    "min_version": "1.3.0",
+    "max_version": "1.3.99"
+  },
+  "sdk": {
+    "min_version": "2.0.0",
+    "max_version": "2.99.99"
+  },
+  "dependencies": [],
+  "capabilities": [
+    "frequency.set_adjust",
+    "frequency.get_current_talk_value",
+    "frequency.get_adjust",
+    "llm.generate"
+  ],
+  "i18n": {
+    "default_locale": "zh-CN",
+    "supported_locales": [
+      "zh-CN"
+    ]
+  },
+  "id": "maibot-team.planner-social",
+  "display": {
+    "icon": {
+      "type": "local",
+      "value": "assets/icon.svg"
+    }
+  }
+}
